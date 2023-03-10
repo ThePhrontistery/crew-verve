@@ -1,0 +1,68 @@
+
+
+<div id="stats-container" class="flex flex-col justify-center">
+  <div class="flex flex-col lg:flex-row  justify-center">
+    <select name="project_id" class="select select-primary mb-5 w-full max-w-xs">
+                
+        {% for project in stats.projects %}
+            <option value="{{project.id}}" data-debug="{{loop.index0}}   {{stats.selected_project}}"  {{ 'selected' if loop.index0 == stats.selected_project }} >{{project.name}}</option>
+        {% endfor %}
+    </select>
+
+    <select name="survey_id" class="select select-primary mb-5 w-full max-w-xs">
+                
+      {% for survey in stats.surveys %}
+          <option value="{{survey.id}}" {{'selected' if loop.index0 == stats.selected_survey }} >{{survey.title}}</option>
+      {% endfor %}
+    </select>
+
+  </div>
+
+  <div class=" rounded-lg shadow-lg p-8">
+
+    <div id="stats-container"  class="{{'hidden' if stats.selected_survey == -1}} stats shadow stats-vertical lg:stats-horizontal">
+      
+      <div class="stat place-items-center">
+        <div class="stat-title">Rating</div>
+        <div class="stat-value">
+          <div class="rating {{'grayscale opacity-25' if not stats.survey_has_answers }}">
+            <input type="radio" name="rating-5" class="mask mask-star-2 bg-blue-400" disabled />
+            <input type="radio" name="rating-5" class="mask mask-star-2 bg-blue-400" disabled  />
+            <input type="radio" name="rating-5" class="mask mask-star-2 bg-blue-400" disabled checked/> 
+            <input type="radio" name="rating-5" class="mask mask-star-2 bg-blue-400" disabled  />
+            <input type="radio" name="rating-5" class="mask mask-star-2 bg-blue-400" disabled />
+          </div>
+        </div>
+        <div class="stat-desc">title</div>
+      </div>
+      
+      <div class="stat place-items-center">
+        <div class="stat-title">Mood</div>
+        <img class="w-32 h-32" src="{{ url_for('static', filename='emojis/mood-' + 1 | string + '.svg') }}">
+      </div>
+      
+      <div class="stat place-items-center">
+        <div class="stat-title">Survey completed</div>
+        <div class="radial-progress text-primary" style="--value:20;">20%</div>
+        
+      </div>
+      
+    </div>
+
+    <div class="-hidden alert alert-warning shadow-lg">
+      <div>
+        <svg xmlns="http://www.w3.org/2000/svg" class="stroke-current flex-shrink-0 h-6 w-6" fill="none" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" /></svg>
+        <span>This project doesn't have any surveys (activate style 'hidden')</span>
+      </div>
+    </div>
+
+    <div class="-hidden alert alert-warning shadow-lg">
+      <div>
+        <svg xmlns="http://www.w3.org/2000/svg" class="stroke-current flex-shrink-0 h-6 w-6" fill="none" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" /></svg>
+        <span>This survey doesn't have any answers as yet (activate style 'hidden')</span>
+      </div>
+    </div>
+
+  </div>
+
+</div>

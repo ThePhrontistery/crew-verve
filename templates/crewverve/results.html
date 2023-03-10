@@ -1,0 +1,23 @@
+
+{% extends '/base.html' %}
+
+
+{% block content %}
+
+
+<div class="flex items-center justify-center h-screen bg-base-200">
+
+
+  {% include '/crewverve/result-stats.html' %}
+
+  <div class="hidden lg:block fixed bottom-0 w-full">
+    {%  include 'footer.html' %}
+  </div>
+</div>
+
+
+<div class="block lg:hidden">
+  {%  include 'footer.html' %}
+</div>
+
+{% endblock %}

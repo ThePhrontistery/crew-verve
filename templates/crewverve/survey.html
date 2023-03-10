@@ -1,0 +1,55 @@
+{% extends '/base.html' %}
+
+{% block content %}
+
+<div class="navbar bg-base-100">
+    <img class="w-10 h-10" src="{{ url_for('static', filename='crewverve-janus-face.png') }}">
+    <span class="normal-case text-xl"><span class="crewverve-title font-bold text-3xl">Crew-verve</span>: tell what you feel and think (survey: {{survey.title}})</span>
+</div>
+<form action="" method="POST">
+<input type="hidden" name="survey_id" value={{survey.id}}>
+<div class="relative flex flex-wrap overflow-hidden py-6 ">
+
+    <div class="card w-96 bg-base-100 shadow-xl m-2">
+        <div class="card-body">
+
+            <span class="text-lg">How do you feel about your current project? </span>
+            <input name="mood" type="range" min="0" max="100" value="50" class="range" step="25"/>
+            <div class="w-full flex justify-between px-2 text-3xl">
+                <span>😭</span>
+                <span>🙁</span>
+                <span>😐</span>
+                <span>😊</span>
+                <span>😃</span>
+            </div>
+        </div>
+    </div>
+
+    {% for questions in questions %}
+    <div class="card w-96 bg-base-100 shadow-xl m-2">
+        <div class="card-body">
+            <span class="text-lg">{{questions}}</span>
+            <div class="rating rating-lg">
+                <input type="radio" name="rating-{{loop.index0}}" value="1" class="mask mask-star-2 bg-green-500"/>
+                <input type="radio" name="rating-{{loop.index0}}" value="2" class="mask mask-star-2 bg-green-500"/>
+                <input type="radio" name="rating-{{loop.index0}}" value="3" checked class="mask mask-star-2 bg-green-500"/>
+                <input type="radio" name="rating-{{loop.index0}}" value="4" class="mask mask-star-2 bg-green-500"/>
+                <input type="radio" name="rating-{{loop.index0}}" value="5" class="mask mask-star-2 bg-green-500"/>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+<div class="card-actions">
+    <button class="btn btn-primary">Save</button>
+</div>
+</form>
+<div class="hidden lg:block fixed bottom-0 w-full">
+    {%  include 'footer.html' %}
+</div>
+
+<div class="block lg:hidden">
+    {%  include 'footer.html' %}
+</div>
+
+{% endblock %}

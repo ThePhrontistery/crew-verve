@@ -1,0 +1,46 @@
+
+{% extends '/base.html' %}
+
+
+{% block content %}
+
+<div class="hero min-h-screen bg-base-200">
+    <div class="hero-content flex-col lg:flex-row">
+      <img src="{{ url_for('static', filename='crewverve-janus-face.png') }}" class="max-w-sm rounded-lg shadow-2xl" />
+      <div>
+        <h1 class="text-5xl font-bold"><span class="crewverve-title">Crew-verve</span>: tell what you feel and think</h1>
+        <p class="py-6">We invite you to share what you feel and think about your current project(s). We would like to know 
+          how things are going, as the Team really knows best. But people don't always feel free to share their true opinions. 
+          With this application you can provide us with your feedback anonymously as the data you provide is not tracable to 
+          you <sup>*)</sup>. Select a pending Survey from the select box down. Click on menuy "Results" to see the stats related
+          with your projects. 
+        </p>
+        <p class="py-2"><sup>*)</sup> The application keeps track whether you have completed a survey but does not present that information
+          to the PM. And your answers are stored without any possible association to you.</p>
+        <form action="{{ url_for('crewverve.survey') }}" method="POST">
+        <div class="form-control">
+          <label class="input-group">
+            <span>Pending surveys</span>
+            <select name="survey_id" {{ 'disabled' if (pending_surveys | length) == 0 }} class="select select-primary w-full max-w-xs">
+              
+              {% for survey in pending_surveys %}
+                  <option value="{{survey.id}}">{{survey.title}}</option>
+              {% endfor %}
+            </select>
+            <button class="{{ 'btn-disabled' if (pending_surveys | length) == 0 }} btn btn-primary">Goto survey</button>
+          </label>
+        </div> 
+        </form>  
+      </div>
+    </div>
+   
+    <div class="hidden lg:block fixed bottom-0 w-full">
+        {%  include 'footer.html' %}
+    </div>
+  
+</div>
+<div class="block lg:hidden">
+{%  include 'footer.html' %}
+</div>
+
+{% endblock %}

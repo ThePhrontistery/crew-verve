@@ -1,0 +1,27 @@
+
+{% extends '/base.html' %}
+
+
+{% block content %}
+
+<div class="hero min-h-screen bg-base-200">
+    <div class="hero-content flex-col lg:flex-row">
+      <img src="{{ url_for('static', filename='work.png') }}" class="max-w-sm rounded-lg shadow-2xl" />
+      <div>
+        <h1 class="text-5xl font-bold">Still busy working on <span class="crewverve-title">Crew-verve</span><h1>
+        <p class="py-6">This will be the part of Crew-verve where data is managed, users created etc. 
+        </p>  
+        
+      </div>
+    </div>
+   
+    <div class="hidden lg:block fixed bottom-0 w-full">
+        {%  include 'footer.html' %}
+    </div>
+  
+</div>
+<div class="block lg:hidden">
+{%  include 'footer.html' %}
+</div>
+
+{% endblock %}
