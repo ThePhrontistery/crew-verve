@@ -1,4 +1,4 @@
-# Crew-verve
+# Crew-verve - The Return of the Angry COBOL Mob
 
 Crew-verve is a Python web app (built on [Flask](https://flask.palletsprojects.com/)) for measuring the mood of a team (or any other group of people for that matter). 
 Crew-verve serves as a simple demo and playground for [Flask](https://flask.palletsprojects.com/), [Htmx](https://htmx.org/) and [Tailwind CSS](https://tailwindcss.com/).
