@@ -1,5 +1,6 @@
 from flask import Flask, redirect, render_template, request, session, url_for
 from flask_sqlalchemy import SQLAlchemy
+from crewverve.data import get_user_by_name
 from crewverve.middleware import authenticate_handler
 from crewverve.views import crewverve_bp
 from crewverve.models import init_app
@@ -25,24 +26,29 @@ def before_request():
     return authenticate_handler(None)
 
 
+
 @app.route('/login', methods=['GET', 'POST'])
 def login():
+    #------V01 Paloma-----------------------------------------------
     error = None
 
     if request.method == 'POST':
         username = request.form['username']
         password = request.form['password']
 
+        user = get_user_by_name(username)
 
-        if username == 'john' and password == 'hola':
-        
-            session['CURRENT_USER'] = username
-            return redirect(url_for('crewverve.index'))
-        else:
+        if user is None or not user.check_password(password):
             error = 'Invalid username or password'
-               
+        else:
+            # Note: Flask session. NOT SqlAlchemy...
+            session['CURRENT_USER'] = username   
+            return redirect(url_for('crewverve.index'))
+        
+        
 
     return render_template('login.html', error=error)
+#------V01 Paloma-----------------------------------------------
 
 
 @app.route('/logout', methods=['GET'])

@@ -4,10 +4,10 @@
 
 <div class="navbar bg-base-100">
     <img class="w-10 h-10" src="{{ url_for('static', filename='crewverve-janus-face.png') }}">
-    <span class="normal-case text-xl"><span class="crewverve-title font-bold text-3xl">Crew-verve</span>: tell what you feel and think (survey: {{survey.title}})</span>
+    <span class="normal-case text-xl"><span class="crewverve-title font-bold text-3xl">Crew-verve</span>: tell what you feel and think (survey: {{survey.name_survey}})</span>
 </div>
-<form action="" method="POST">
-<input type="hidden" name="survey_id" value={{survey.id}}>
+<form action="{{ url_for('crewverve.results') }}" method="POST">
+<input type="hidden" name="survey_id" value={{survey.id_survey}}>
 <div class="relative flex flex-wrap overflow-hidden py-6 ">
 
     <div class="card w-96 bg-base-100 shadow-xl m-2">
