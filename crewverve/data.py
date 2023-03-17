@@ -14,6 +14,13 @@ questions = [
 # https://flask-sqlalchemy.palletsprojects.com/en/3.0.x/queries/
 # https://docs.sqlalchemy.org/en/20/orm/queryguide/index.html
 
+# PLP 17.03.2023
+# Añado esta funcion del data de que-hacer para poder grabar contraseñas desde user_man
+def find_user_by_name(user_name):
+    "Searched for User from db by name. Needs not to exist"
+    return db.session.execute(db.select(User).filter_by(name_user=user_name)).scalar_one_or_none()
+
+
 def get_user_by_id(user_id):
     return db.session.execute(db.select(User).filter_by(id_user=user_id)).scalar_one()
 
@@ -49,13 +56,19 @@ def get_active_survey_by_project_id(project_ids):
     return db.session.execute(db.select(Survey).where(Survey.id_project.in_(project_ids)))
 
 def save_results(id_survey):
-    return ok_o_none
+    # PLP 17.03.2023
+    pass
+    #return ok_o_none
 
 def update_ticket(idsurvey, iduser):
-    return ok_o_none
+    # PLP 17.03.2023
+    pass
+    #return ok_o_none
 
 def get_results_stats(idsurvey, idproyect, iduser):
-    return results
+    # PLP 17.03.2023
+    pass
+    #return results
 
 def get_survey_by_id(survey_id):
     return db.session.execute(db.select(Survey).filter_by(id_survey=survey_id)).scalar_one_or_none()
