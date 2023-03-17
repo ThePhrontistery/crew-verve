@@ -49,13 +49,19 @@ def get_active_survey_by_project_id(project_ids):
     return db.session.execute(db.select(Survey).where(Survey.id_project.in_(project_ids)))
 
 def save_results(id_survey):
-    return ok_o_none
+    #LGG modifico añadiendo pass
+    pass
+    #return ok_o_none
 
 def update_ticket(idsurvey, iduser):
-    return ok_o_none
+    #LGG modifico añadiendo pass
+    pass
+    #return ok_o_none
 
 def get_results_stats(idsurvey, idproyect, iduser):
-    return results
+    #LGG modifico añadiendo pass
+    pass
+    #return results
 
 def get_survey_by_id(survey_id):
     return db.session.execute(db.select(Survey).filter_by(id_survey=survey_id)).scalar_one_or_none()
