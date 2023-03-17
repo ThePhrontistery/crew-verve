@@ -59,6 +59,14 @@ def get_results_stats(idsurvey, idproyect, iduser):
 
 def get_survey_by_id(survey_id):
     return db.session.execute(db.select(Survey).filter_by(id_survey=survey_id)).scalar_one_or_none()
+#
+def find_survey_ticket_by_id(user_id,survey_id):
+    return db.session.execute(db.select(Survey_ticket).filter_by(user_id=user_id, survey_id=survey_id)).scalar_one_or_none()
 
+def update_ticket(user_id,survey_id):
+    ticket = find_survey_ticket_by_id(user_id,survey_id)
+    ticket.completed = not ticket.completed
+    db.session.commit()
+    return ticket
 
 
