@@ -24,7 +24,7 @@
             <select name="survey_id" {{ 'disabled' if (pending_surveys | length) == 0 }} class="select select-primary w-full max-w-xs">
               
               {% for survey in pending_surveys %}
-                  <option value="{{survey.id}}">{{survey.title}}</option>
+                  <option value="{{survey.id_survey}}">{{survey.name_survey}}</option>
               {% endfor %}
             </select>
             <button class="{{ 'btn-disabled' if (pending_surveys | length) == 0 }} btn btn-primary">Goto survey</button>
