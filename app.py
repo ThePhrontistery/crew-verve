@@ -26,7 +26,6 @@ def before_request():
     return authenticate_handler(None)
 
 
-
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     #----Prueba branch
