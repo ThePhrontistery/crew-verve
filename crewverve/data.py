@@ -56,17 +56,23 @@ def get_active_survey_by_project_id(project_ids):
     return db.session.execute(db.select(Survey).where(Survey.id_project.in_(project_ids)))
 
 def save_results(id_survey):
-    # PLP 17.03.2023
+
+    #LGG modifico añadiendo pass
+    
     pass
     #return ok_o_none
 
 def update_ticket(idsurvey, iduser):
-    # PLP 17.03.2023
+
+    #LGG modifico añadiendo pass
+
     pass
     #return ok_o_none
 
 def get_results_stats(idsurvey, idproyect, iduser):
-    # PLP 17.03.2023
+
+    #LGG modifico añadiendo pass
+
     pass
     #return results
 
