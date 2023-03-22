@@ -1,5 +1,5 @@
 from flask import Blueprint, redirect, render_template, request, session, url_for
-from .data import get_survey_by_id, get_user_by_name, get_pending_surveys_by_user, questions
+from .data import get_survey_by_id, get_user_by_name, get_pending_surveys_by_user, questions, show_result
 
 
 crewverve_bp = Blueprint('crewverve', __name__)
@@ -18,12 +18,12 @@ def survey():
     return render_template('crewverve/survey.html', questions=questions, survey=survey)
 
 
-@crewverve_bp.route('/crewverve/results', methods=['POST'])
-def results():
+@crewverve_bp.route('/crewverve/results_footer', methods=['POST','GET'])
+def show_results_footer():
 
-
-
-    return render_template('crewverve/results.html', stats=[])
+    stat = show_result()
+    print (stat)
+    return render_template('crewverve/results.html', stats=stat)
 
 
 """ def results():

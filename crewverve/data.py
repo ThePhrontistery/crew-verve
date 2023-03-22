@@ -1,4 +1,4 @@
-from .models import Survey, Survey_ticket, db, User
+from .models import Survey, Survey_ticket, db, User, Stats
 
 questions = [
     "My enthusiasm regarding the work I do...",
@@ -88,4 +88,26 @@ def update_ticket(user_id,survey_id):
     db.session.commit()
     return ticket
 
+def get_surveys_by_project(id_project):
+    return db.session.execute(db.select(Survey).filter_by(id_project=id_project))
+
+def show_result():
+    #Se define objeto de la clase Stats
+    stat = Stats()
+    stat.project = get_projects_by_user("John")
+
+    for project in stat.project:
+        #Se recuperan las encuestas de cada proyecto
+        stat.survey = get_surveys_by_project(project.id_project)
+        print(f"Proyecto: {project.id_project}")
+        encuesta = Survey.id_survey in stat.survey
+        print(f"Encuesta: {encuesta}")
+    
+    stat.selected_project = -1
+    stat.selected_survey = -1
+    stat.survey_has_answers = -1
+
+    print(stat)
+    return stat
+    
 
