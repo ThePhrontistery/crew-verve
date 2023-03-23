@@ -5,14 +5,14 @@
     <select name="project_id" class="select select-primary mb-5 w-full max-w-xs">
                 
         {% for project in stats.projects %}
-            <option value="{{project.id}}" data-debug="{{loop.index0}}   {{stats.selected_project}}"  {{ 'selected' if loop.index0 == stats.selected_project }} >{{project.name}}</option>
+            <option value="{{project.id_project}}" data-debug="{{loop.index0}}   {{stats.selected_project}}"  {{ 'selected' if loop.index0 == stats.selected_project }} >{{project.name_project}}</option>
         {% endfor %}
     </select>
 
     <select name="survey_id" class="select select-primary mb-5 w-full max-w-xs">
                 
       {% for survey in stats.surveys %}
-          <option value="{{survey.id}}" {{'selected' if loop.index0 == stats.selected_survey }} >{{survey.title}}</option>
+          <option value="{{survey.id_survey}}" {{'selected' if loop.index0 == stats.selected_survey}} >{{survey.name_survey}}</option>
       {% endfor %}
     </select>
 

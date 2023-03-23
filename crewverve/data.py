@@ -1,4 +1,5 @@
-from .models import Project, Survey, Survey_answer, Survey_ticket, db, User
+from .models import Project, Survey, Survey_answer, Survey_ticket, db, User, Stats
+
 
 questions = [
     "My enthusiasm regarding the work I do...",
@@ -49,22 +50,38 @@ def get_active_surveys(pending_survey_ids):
 def get_active_survey_by_project_id(project_ids):
     return db.session.execute(db.select(Survey).where(Survey.id_project.in_(project_ids)))
 
-def get_results_stats(idsurvey, idproyect, iduser):
-    #LGG modifico añadiendo pass
-    pass
-    #return results
-
 def get_survey_by_id(survey_id):
     return db.session.execute(db.select(Survey).filter_by(id_survey=survey_id)).scalar_one_or_none()
 #
 def find_survey_ticket_by_id(user_id,survey_id):
     return db.session.execute(db.select(Survey_ticket).filter_by(user_id=user_id, survey_id=survey_id)).scalar_one_or_none()
 
-def update_ticket(user_id,survey_id):
-    ticket = find_survey_ticket_by_id(user_id,survey_id)
-    ticket.completed = not ticket.completed
-    db.session.commit()
-    return ticket
+def update_ticket(user_name,survey_id):
+    try:
+        user = get_user_by_name(user_name)
+        ticket = find_survey_ticket_by_id(user.id_user,survey_id)
+        ticket.completed = not ticket.completed
+        db.session.commit()
+        return True
+    except Exception:
+        db.session.rollback()
+        return False
+
+def show_result(user_name):
+    #Se define objeto de la clase Stats
+    stat = Stats()
+    stat.projects = get_projects_by_user(user_name)
+
+    for project in stat.projects:
+        #Se recuperan las encuestas de cada proyecto
+        stat.surveys = project.surveys
+    
+    stat.selected_project = -1
+    stat.selected_survey = -1
+    stat.survey_has_answers = -1
+    
+    return stat
+    
 
 #PL-INICIO- 21/03/2023
 def save_results(id_survey,answers):
