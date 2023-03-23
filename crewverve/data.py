@@ -152,7 +152,7 @@ def update_survey_stats(id_survey,id_project):
         #mood es la media(total de mood entre el número de participantes)
         survey.mood = mood_total / participation_total
         #rating es la media(total de rating entre el número de participantes)
-        survey.rating = rating_total / participation_total
+        survey.rating = rating_total / (participation_total*8)
         #participation es el número de usuario de projecto entre participantes
         survey.participation = participation_total*100 / user_total
         db.session.commit()
