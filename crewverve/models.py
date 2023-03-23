@@ -1,3 +1,4 @@
+from typing import Self
 import bcrypt
 from flask_sqlalchemy import SQLAlchemy
 
@@ -71,3 +72,11 @@ user_project = db.Table('user_project',
     db.Column('user_id', db.Integer, db.ForeignKey('user.id_user'), primary_key=True),
     db.Column('project_id', db.Integer, db.ForeignKey('project.id_project'), primary_key=True)
 )
+
+class Stats:
+    projects = Project
+    surveys = Survey
+    selected_project: int
+    selected_survey: int
+    survey_has_answers: int
+    
