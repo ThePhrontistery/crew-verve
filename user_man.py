@@ -2,7 +2,6 @@
 
 import getpass
 from crewverve.models import User
-from crewverve.data import find_user_by_name
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy import create_engine, select
@@ -17,7 +16,8 @@ def create_user(username, password):
     
     login = username.lower()
     # Create user with username (Lower case)
-    user = User(name_user=login)
+    # email_user es un dato obligatorio, si no lo pasamos el commit lo hace mal y genera un except
+    user = User(name_user=login, email_user = 'usuario@gmail.com')
     # Hash the password (Lower) using the User model's set_password method
     user.set_password(password)
 
