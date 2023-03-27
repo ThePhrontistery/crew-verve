@@ -67,19 +67,69 @@ def update_ticket(user_name,survey_id):
         db.session.rollback()
         return False
 
-def show_result(user_name):
+def find_position_projects(id,projects):
+    i=0
+    for project in projects:        
+        if project.id_project == id:
+            return i
+            break
+        else:
+            i = i + 1
+        
+def find_position_surveys(id,surveys):
+    i = 0
+    for survey in surveys:        
+        if survey.id_survey == id:
+            return i
+            break        
+        i = i + 1
+
+def show_result(user_name, id_project, id_survey):
+    
     #Se define objeto de la clase Stats
     stat = Stats()
+    #Se recuperan los proyectos por usuario
     stat.projects = get_projects_by_user(user_name)
 
+    #Si solo viene informada la encuesta, se accede a recuperar el id de proyecto
+    if id_project == 0 and id_survey != 0:
+        survey = get_survey_by_id(id_survey)
+        id_project = survey.id_project
+
+    #Si no ha seleccionado un proyecto, se iguala el primero que se encuentra
+    if id_project == 0:        
+        id_project = stat.projects[0].id_project
+    
     for project in stat.projects:
-        #Se recuperan las encuestas de cada proyecto
-        stat.surveys = project.surveys
-    
-    stat.selected_project = -1
-    stat.selected_survey = -1
-    stat.survey_has_answers = -1
-    
+        #Se recuperan las encuestas del proyecto seleccionado
+        if project.id_project == id_project:
+            stat.surveys = sorted(project.surveys,key=lambda x:x.start_date)            
+            break
+    #Para que se cargue el proyecto que se ha seleccionado, buscamos la posición que ocupa
+    #dentro del combo y es la que le pasamos.
+    stat.selected_project = find_position_projects(id_project,stat.projects)
+
+    try:     
+        stat.survey_has_answers = 1
+        #Se comprueba si tiene datos la clase survey
+        if stat.surveys[0].id_survey != 0: 
+            #Si tiene datos, se comprueba si han seleccionado alguna encuesta
+            if id_survey != 0:
+                #Se iguala a la seleccionada
+                stat.selected_survey = find_position_surveys(id_survey,stat.surveys)
+            else:
+                #Se iguala a la primera encuesta encontrada
+                stat.selected_survey = 0
+        else:
+            #Si no tiene datos, es que el proyecto no tiene encuestas seleccionadas
+            stat.selected_survey = -1
+            stat.survey_has_answers = -1
+    except Exception:
+        #Salta la excepción en caso que no tenga encuestas el proyecto
+        stat.selected_survey = -1
+        stat.survey_has_answers = -1
+        stat.surveys = []
+           
     return stat
     
 
