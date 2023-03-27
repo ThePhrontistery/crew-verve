@@ -1,7 +1,7 @@
 from flask import Blueprint, redirect, render_template, request, session, url_for
 
 
-from .data import create_answer, get_survey_by_id, get_user_by_name, get_pending_surveys_by_user, questions, transform_mood, update_survey_stats, update_ticket, show_result, save_results
+from .data import get_survey_by_id, get_pending_surveys_by_user, questions, transform_mood, update_ticket, show_result, save_results
 
 
 crewverve_bp = Blueprint('crewverve', __name__)
@@ -50,7 +50,8 @@ def results():
     if resultado_save:
         id_survey = request.form['survey_id']
         if update_ticket(session['CURRENT_USER'],id_survey): 
-            stat = show_result(session['CURRENT_USER'])
+            survey = get_survey_by_id(id_survey)
+            stat = show_result(session['CURRENT_USER'],survey.id_project,int(id_survey))
         else:
             return render_template('error.html', error_message="error", error_description="No se ha podido grabar su respuesta, inténtelo más tarde")
     else:
@@ -59,24 +60,15 @@ def results():
 
 @crewverve_bp.route('/crewverve/results_footer', methods=['GET'])
 def show_results_footer():
-    stat = show_result(session['CURRENT_USER'])    
+    if 'project_id' in request.args:
+        id_project = request.args.get('project_id',type=int)
+    else:
+        id_project = 0
+    
+    if 'survey_id' in request.args:
+        id_survey = request.args.get('survey_id',type=int)
+    else:
+        id_survey = 0
+    stat = show_result(session['CURRENT_USER'],id_project,id_survey)    
     return render_template('crewverve/results.html', stats=stat)
 
-""" def results():
-    save():
-        - grabar en BBDD las respuestas y los calculos de la pantalla RESULTS  de esta encuesta y proyecto
-        - actualizar el ticket de usuario marcarlo como realizado
-
-    #show results 
-     if request.endpoint not in ('survey')
-        show_results()
-    else
-    stats = []
-    if save():
-        if update_ticket():
-            stats = show_results()
-        else:
-            return render_template('error.html', error_message="error", error_description="This isn't the page you are looking for....")
-    else:
-        return render_template('error.html', error_message="error", error_description="This isn't the page you are looking for....")
-    return render_template('crewverve/results.html', stats=stats) """
