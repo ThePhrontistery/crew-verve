@@ -76,6 +76,7 @@ user_project = db.Table('user_project',
 class Stats:
     projects = Project
     surveys = Survey
+    survey = Survey
     selected_project: int
     selected_survey: int
     survey_has_answers: int
