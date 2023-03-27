@@ -26,9 +26,10 @@ def before_request():
     return authenticate_handler(None)
 
 
+
 @app.route('/login', methods=['GET', 'POST'])
 def login():
-    #----Prueba branch
+    #------V01 Paloma-----------------------------------------------
     error = None
 
     if request.method == 'POST':
@@ -47,7 +48,7 @@ def login():
         
 
     return render_template('login.html', error=error)
-#----Prueba branch
+#------V01 Paloma-----------------------------------------------
 
 
 @app.route('/logout', methods=['GET'])
