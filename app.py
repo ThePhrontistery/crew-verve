@@ -42,7 +42,7 @@ def login():
             error = 'Invalid username or password'
         else:
             # Note: Flask session. NOT SqlAlchemy...
-            session['CURRENT_USER'] = username   
+            session['CURRENT_USER'] = username
             return redirect(url_for('crewverve.index'))
         
         

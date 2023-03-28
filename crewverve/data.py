@@ -94,37 +94,39 @@ def show_result(user_name, id_project, id_survey):
     #Si solo viene informada la encuesta, se accede a recuperar el id de proyecto
     if id_project == 0 and id_survey != 0:
         stat.survey = get_survey_by_id(id_survey)
-        #if len(stat.survey.answers) > 0:
-            #stat.survey_has_answers = 1
         id_project = stat.survey.id_project
 
     #Si no ha seleccionado un proyecto, se iguala el primero que se encuentra
-    if id_project == 0:        
-        id_project = stat.projects[0].id_project
+    if id_project == 0:
+        try:
+            id_project = stat.projects[0].id_project
+        except:
+            return 0
     
     for project in stat.projects:
         #Se recuperan las encuestas del proyecto seleccionado
         if project.id_project == id_project:
-            stat.surveys = sorted(project.surveys,key=lambda x:x.start_date)            
+            stat.surveys = sorted(project.surveys,key=lambda x:x.start_date)
             break
     #Para que se cargue el proyecto que se ha seleccionado, buscamos la posición que ocupa
     #dentro del combo y es la que le pasamos.
     stat.selected_project = find_position_projects(id_project,stat.projects)
 
-    try:     
-        stat.survey_has_answers = 1
+    try:
+        stat.survey_has_answers = -1
         #Se comprueba si tiene datos la clase survey
-        if stat.surveys[0].id_survey != 0: 
+        if stat.surveys[0].id_survey != 0:
             #Si tiene datos, se comprueba si han seleccionado alguna encuesta
             if id_survey != 0:
                 #Se iguala a la seleccionada
                 stat.selected_survey = find_position_surveys(id_survey,stat.surveys)
+                stat.survey = stat.surveys[stat.selected_survey]
             else:
                 #Se iguala a la primera encuesta encontrada
                 stat.selected_survey = 0
                 stat.survey = stat.surveys[0]
-                #if len(stat.survey.answers) > 0:
-                    #stat.survey_has_answers = 1
+            if len(stat.survey.answers) > 0:
+                stat.survey_has_answers = 1
         else:
             #Si no tiene datos, es que el proyecto no tiene encuestas seleccionadas
             stat.selected_survey = -1
@@ -134,9 +136,8 @@ def show_result(user_name, id_project, id_survey):
         stat.selected_survey = -1
         stat.survey_has_answers = -1
         stat.surveys = []
-           
     return stat
-    
+
 
 #PL-INICIO- 21/03/2023
 def save_results(id_survey,answers):

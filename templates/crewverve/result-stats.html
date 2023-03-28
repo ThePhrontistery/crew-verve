@@ -25,41 +25,40 @@
       <div class="stat place-items-center">
         <div class="stat-title">Rating</div>
         <div class="stat-value">
-          <div class="rating {{'grayscale opacity-25' if not stats.survey_has_answers }}">
-            <input type="radio" name="rating-5" class="mask mask-star-2 bg-blue-400" disabled {{'checked' if stats.survey.rating == 1}}/>
-            <input type="radio" name="rating-5" class="mask mask-star-2 bg-blue-400" disabled {{'checked' if stats.survey.rating == 2}} />
-            <input type="radio" name="rating-5" class="mask mask-star-2 bg-blue-400" disabled {{'checked' if stats.survey.rating == 3}}/> 
-            <input type="radio" name="rating-5" class="mask mask-star-2 bg-blue-400" disabled  {{'checked' if stats.survey.rating == 4}}/>
-            <input type="radio" name="rating-5" class="mask mask-star-2 bg-blue-400" disabled {{'checked' if stats.survey.rating == 5}}/>
+          <div class="rating {{'grayscale opacity-25' if stats.survey_has_answers == -1}}">
+            <input type="radio" name="rating-5" class="mask mask-star-2 bg-blue-400" disabled {{'checked' if stats.survey.rating|round|int == 1}}/>
+            <input type="radio" name="rating-5" class="mask mask-star-2 bg-blue-400" disabled {{'checked' if stats.survey.rating|round|int == 2}} />
+            <input type="radio" name="rating-5" class="mask mask-star-2 bg-blue-400" disabled {{'checked' if stats.survey.rating|round|int == 3}}/> 
+            <input type="radio" name="rating-5" class="mask mask-star-2 bg-blue-400" disabled  {{'checked' if stats.survey.rating|round|int == 4}}/>
+            <input type="radio" name="rating-5" class="mask mask-star-2 bg-blue-400" disabled {{'checked' if stats.survey.rating|round|int == 5}}/>
           </div>
         </div>
-        <div class="stat-desc">title</div>
+        <div class="stat-desc">{{stats.survey.name_survey}}</div>
       </div>
       
       <div class="stat place-items-center">
         <div class="stat-title">Mood</div>
-        <img class="w-32 h-32" src="{{ url_for('static', filename='emojis/mood-' + stats.survey.mood | string + '.svg') }}">
+        <img class="w-32 h-32" src="{{ url_for('static', filename='emojis/mood-' + stats.survey.mood|round|int | string + '.svg') }}">
       </div>
       
       <div class="stat place-items-center">
         <div class="stat-title">Survey completed</div>
-        <div class="radial-progress text-primary" style="--value:20;">{{stats.survey.participation}}</div>
+        <div class="radial-progress text-primary" style="--value:{{stats.survey.participation}};">{{stats.survey.participation}}</div>
         
       </div>
       
     </div>
-
-    <div class="{{'hidden' if stats.selected_survey == -1}} alert alert-warning shadow-lg">
+    <div class="{{'hidden' if stats.surveys|length > 0}} alert alert-warning shadow-lg">
       <div>
         <svg xmlns="http://www.w3.org/2000/svg" class="stroke-current flex-shrink-0 h-6 w-6" fill="none" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" /></svg>
         <span>This project doesn't have any surveys</span>
       </div>
     </div>
 
-    <div class="{{'hidden' if stats.survey_has_answers == -1}} alert alert-warning shadow-lg">
+    <div class="{{'hidden' if stats.survey_has_answers == 1}} alert alert-warning shadow-lg">
       <div>
         <svg xmlns="http://www.w3.org/2000/svg" class="stroke-current flex-shrink-0 h-6 w-6" fill="none" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" /></svg>
-        <span>This survey doesn't have any answers as yet (activate style 'hidden')</span>
+        <span>This survey doesn't have any answers as yet</span>
       </div>
     </div>
 
