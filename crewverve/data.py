@@ -135,6 +135,7 @@ def show_result(user_name, id_project, id_survey):
         #Salta la excepción en caso que no tenga encuestas el proyecto
         stat.selected_survey = -1
         stat.survey_has_answers = -1
+        stat.survey = Survey (mood= 0, rating = 0, participation = 0)
         stat.surveys = []
     return stat
 
