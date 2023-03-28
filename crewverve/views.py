@@ -51,12 +51,12 @@ def results():
         id_survey = request.form['survey_id']
         if update_ticket(session['CURRENT_USER'],id_survey): 
             survey = get_survey_by_id(id_survey)
-            stat = show_result(session['CURRENT_USER'],survey.id_project,int(id_survey))
         else:
             return render_template('error.html', error_message="error", error_description="No se ha podido grabar su respuesta, inténtelo más tarde")
     else:
         return render_template('error.html', error_message="error", error_description="No se ha podido grabar su respuesta, inténtelo más tarde")
-    return render_template('crewverve/results.html', stats=stat)
+    
+    return redirect(url_for('crewverve.show_results_footer', project_id=survey.id_project, survey_id=int(id_survey)))
 
 @crewverve_bp.route('/crewverve/results_footer', methods=['GET'])
 def show_results_footer():
@@ -69,6 +69,9 @@ def show_results_footer():
         id_survey = request.args.get('survey_id',type=int)
     else:
         id_survey = 0
-    stat = show_result(session['CURRENT_USER'],id_project,id_survey)    
+    stat = show_result(session['CURRENT_USER'],id_project,id_survey)
+
+    if stat == 0:
+        return render_template('error.html', error_message="error", error_description="No está asignado a ningun proyecto")
     return render_template('crewverve/results.html', stats=stat)
 
