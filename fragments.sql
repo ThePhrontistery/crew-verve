@@ -1,11 +1,18 @@
+DELETE FROM project;
+DELETE FROM survey;
+DELETE FROM survey_answer;
+DELETE FROM survey_ticket;
+DELETE FROM user;
+DELETE FROM user_project;
+
+
+--password para todos: hola
 INSERT INTO "user"
 (id_user, name_user, email_user, password_hash, password_salt)
 VALUES
-(1, 'John', 'john@email.com', '$2b$12$gIcSbXQrWqMHTFhbcNOguOQhSNDDq.nQpuX25Fgfy4HKrrIScnaWm', '$2b$12$gIcSbXQrWqMHTFhbcNOguO'),
-(2, 'Jane', 'jane@email.com', 's$$2b$12$6e2DSOJwq.Z/pz8LawWPH.5xl3RDDPuAFerF7Pi1SdOeeS.fy.Nmy', '$2b$12$6e2DSOJwq.Z/pz8LawWPH.');
-
-DELETE FROM user
-;
+(1, 'john', 'john@email.com', '$2b$12$gIcSbXQrWqMHTFhbcNOguOQhSNDDq.nQpuX25Fgfy4HKrrIScnaWm', '$2b$12$gIcSbXQrWqMHTFhbcNOguO'),
+(2, 'jane', 'jane@email.com', 's$$2b$12$6e2DSOJwq.Z/pz8LawWPH.5xl3RDDPuAFerF7Pi1SdOeeS.fy.Nmy', '$2b$12$6e2DSOJwq.Z/pz8LawWPH.'),
+(3, 'jill', 'jill@email.com', '$2b$12$Sox8sFxljetZ41VEhcR2SOV8P2pD5dkyKjbFp0LZ6vzGLrb2kE/iu', '$2b$12$Sox8sFxljetZ41VEhcR2SO');
 
 INSERT INTO project
 (id_project, name_project)
@@ -34,16 +41,19 @@ VALUES
 (5, '2023-02-01 16:00:48.225987', '2023-03-01 16:00:48.225987', 'Project Google Cloud febrero 2023', 0, 0, 0, 0, 2),
 (6, '2023-01-01 16:00:48.225987', '2023-02-01 16:00:48.225987', 'Project Google Cloud enero 2023', 0, 0, 0, 0, 2);
 
-DELETE FROM survey
-;
-
 -- 1 = completed, 0 = not completed
 INSERT INTO survey_ticket
 (user_id, survey_id, completed)
 VALUES
-(1, 1, 1),
+(1, 1, 0),
 (1, 2, 0),
-(1, 4, 0);
+(1, 3, 0),
+(1, 4, 0),
+(1, 5, 0),
+(1, 6, 0),
+(2, 2, 0),
+(2, 5, 0),
+(2, 6, 0);
 
 INSERT INTO survey_answer
 (id_survey_answer, id_survey, answers)
