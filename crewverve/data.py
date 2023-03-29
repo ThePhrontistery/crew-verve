@@ -68,21 +68,10 @@ def update_ticket(user_name,survey_id):
         return False
 
 def find_position_projects(id,projects):
-    i=0
-    for project in projects:        
-        if project.id_project == id:
-            return i
-            break
-        else:
-            i = i + 1
+    return projects.index([project for project in projects if project.id_project == id][0])
         
 def find_position_surveys(id,surveys):
-    i = 0
-    for survey in surveys:        
-        if survey.id_survey == id:
-            return i
-            break        
-        i = i + 1
+    return surveys.index([survey for survey in surveys if survey.id_survey == id][0])
 
 def show_result(user_name, id_project, id_survey):
     
