@@ -43,8 +43,7 @@
       
       <div class="stat place-items-center">
         <div class="stat-title">Survey completed</div>
-        <div class="radial-progress text-primary" style="--value:{{stats.survey.participation}};">{{stats.survey.participation}}%</div>
-        
+        <div class="radial-progress text-primary" style="--value:{{stats.survey.participation|round|int}};">{{"%.2f"|format(stats.survey.participation)}}%</div>
       </div>
       
     </div>
