@@ -20,7 +20,6 @@ def get_user_by_id(user_id):
     return db.session.execute(db.select(User).filter_by(id_user=user_id)).scalar_one()
 
 def get_user_by_name(user_name):
-   
     return db.session.execute(db.select(User).filter_by(name_user=user_name)).scalar_one_or_none()
 
 def get_projects_by_user(user_name):
@@ -32,9 +31,7 @@ def get_pending_surveys_by_user(user_name):
     user = get_user_by_name(user_name)
     pending_survey = get_pending_survey_by_user(user.id_user)
     pending_survey_ids = [pending_survey.survey_id for pending_survey in pending_survey]
-
     active_surveys = get_active_surveys(pending_survey_ids)
-
     return active_surveys
 
 def get_pending_survey_by_user(user_id):
@@ -57,15 +54,12 @@ def find_survey_ticket_by_id(user_id,survey_id):
     return db.session.execute(db.select(Survey_ticket).filter_by(user_id=user_id, survey_id=survey_id)).scalar_one_or_none()
 
 def update_ticket(user_name,survey_id):
-    try:
-        user = get_user_by_name(user_name)
-        ticket = find_survey_ticket_by_id(user.id_user,survey_id)
-        ticket.completed = not ticket.completed
-        db.session.commit()
-        return True
-    except Exception:
-        db.session.rollback()
-        return False
+    user = get_user_by_name(user_name)
+    ticket = find_survey_ticket_by_id(user.id_user,survey_id)
+    ticket.completed = not ticket.completed
+    return db.session.execute(db.update(Survey_ticket).where(Survey_ticket.user_id == user.id_user)
+                              .where(Survey_ticket.survey_id == survey_id)
+                              .values(completed=ticket.completed))
 
 def find_position_projects(id,projects):
     return projects.index([project for project in projects if project.id_project == id][0])
@@ -129,18 +123,18 @@ def show_result(user_name, id_project, id_survey):
     return stat
 
 
-#PL-INICIO- 21/03/2023
-def save_results(id_survey,answers):
-    "Estando en pantalla SURVEY,al dar al botón SAVE->Graba en BBDD las respuestas y los calculos de las medias de esta encuesta y proyecto"
-    #En resultado_create guardamos el resultado del metodo create_answer (true o False) que inserta en 'Survey_answer'
-    resultado_create = create_answer(id_survey, answers)
-    #Actualizamos en la tabla Survey las estadísticas
-    if resultado_create:
-        survey = get_survey_by_id(id_survey)
-        resultado_update = update_survey_stats(id_survey,survey.id_project)
-        if resultado_update:
-            return True
-    else:
+def save_results(id_survey,answers, username):
+    "Estando en pantalla SURVEY,al dar al botón SAVE->Graba en BBDD las respuestas y los calculos de las medias de esta encuesta y proyecto y actualiza el ticket"
+    try:
+        #En resultado_create guardamos el resultado del metodo create_answer (true o False) que inserta en 'Survey_answer'
+        create_answer(id_survey, answers)
+        #Actualizamos en la tabla Survey las estadísticas
+        update_survey_stats(get_survey_by_id(id_survey))
+        update_ticket(username,id_survey)
+        db.session.commit()
+        return True
+    except:
+        db.session.rollback()
         return False
         
 def get_answers_by_id(id_survey):
@@ -153,7 +147,7 @@ def get_users_by_project(id_project):
     return db.session.execute(db.select(Project).filter_by(id_project=id_project)).scalar_one_or_none()
 
 def transform_mood(mood):
-    "transforma el mood recogido en syrvey.html (valores, 0,25,50,75,100) a valores 1,2,3,4,5"
+    "transforma el mood recogido en survey.html (valores, 0,25,50,75,100) a valores 1,2,3,4,5"
     if mood == '100':
        return '5'
     elif mood == '75':
@@ -167,44 +161,29 @@ def transform_mood(mood):
 
 def create_answer(id_survey, answers):
     "Create record in Survey_answer"
-    try:
-        answer = Survey_answer(id_survey=id_survey, answers=answers)
-        db.session.add(answer)
-        db.session.commit()
-        #return answer
-        return True
-    except Exception:
-        #Error  
-        db.session.rollback() 
-        #return render_template('error.html', error_message="error", error_description=(f"Ocurrió un error al crear la respuesta: {e}"))
-        return False
+    answer = Survey_answer(id_survey=id_survey, answers=answers)
+    return db.session.add(answer)
+
     
-def update_survey_stats(id_survey,id_project):
+def update_survey_stats(survey):
     "Actualizamos las estadísticas en la tabla Survey, pásandole el id_survey y el id_project"
-    try:
-        #en answer tengo ahora las columnas answer de las filas recuperadas en get_answers_by_id, solo recuperamos columna answers
-        answer = get_answers_by_id(id_survey)
-        #mood_total tiene el sumatorio de la primera ocurrencia de answer
-        mood_total = sum(int(item_answer[0]) for item_answer in answer) 
-        #participation_total tiene el número de participantes por cada id_survey
-        participation_total = len(answer)
-        #rating_total tiene el sumatorio de las ocurrencias de la 2 a la 16 de las filas recuperadas en get_answers_by_id
-        rating_total = sum(int(item_answer[e]) for item_answer in answer for e in range(2,17,2)) 
-        #Creo la función get_users_by_project y obtengo los usuarios por proyecto en user_total
-        user = get_users_by_project(id_project)
-        user_total = len(user.users)
-        #nos posicionamos en el registro de la tabla Survey con el id_survey que estamos tratando
-        survey = get_survey_by_id(id_survey)
-        #mood es la media(total de mood entre el número de participantes)
-        survey.mood = mood_total / participation_total
-        #rating es la media(total de rating entre el número de participantes)
-        survey.rating = rating_total / (participation_total*8)
-        #participation es el número de usuario de projecto entre participantes
-        survey.participation = participation_total*100 / user_total
-        db.session.commit()
-        return True
-    except Exception:
-        #Error  
-        db.session.rollback() 
-        return False
-#PL -FIN- 21/03/2023   
+    #en answer tengo ahora las columnas answer de las filas recuperadas en get_answers_by_id, solo recuperamos columna answers
+    answer = get_answers_by_id(survey.id_survey)
+    #mood_total tiene el sumatorio de la primera ocurrencia de answer
+    mood_total = sum(int(item_answer[0]) for item_answer in answer) 
+    #participation_total tiene el número de participantes por cada id_survey
+    participation_total = len(answer)
+    #rating_total tiene el sumatorio de las ocurrencias de la 2 a la 16 de las filas recuperadas en get_answers_by_id
+    rating_total = sum(int(item_answer[e]) for item_answer in answer for e in range(2,17,2)) 
+    #Creo la función get_users_by_project y obtengo los usuarios por proyecto en user_total
+    user = get_users_by_project(survey.id_project)
+    user_total = len(user.users)
+    #mood es la media(total de mood entre el número de participantes)
+    survey.mood = mood_total / participation_total
+    #rating es la media(total de rating entre el número de participantes)
+    survey.rating = rating_total / (participation_total*8)
+    #participation es el número de usuario de projecto entre participantes
+    survey.participation = participation_total*100 / user_total
+    return db.session.execute(db.update(Survey).where(Survey.id_survey == survey.id_survey)
+                              .values(mood=survey.mood, rating=survey.rating, participation= survey.participation))
+ 

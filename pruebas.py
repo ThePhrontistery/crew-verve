@@ -19,10 +19,21 @@ def get_projects_by_user(user_name):
     user = get_user_by_name(user_name)
     return user.projects
 
+def update_ticket():
+    peptio = True
+    completed = not peptio
+    return session.execute(update(Survey_ticket).where(Survey_ticket.user_id == 1)
+                              .where(Survey_ticket.survey_id == 1)
+                              .values(completed=completed))
+
 if __name__ == '__main__':
+    session.execute(update(Survey).where(Survey.id_survey == 1).values(mood=1, rating=1, participation= 1))
+    update_ticket()
+    session.commit()
     projects = get_projects_by_user('john')
     cosa = projects.index([i for i in projects][0])
     print(projects)
     cosa2 = [project for project in projects if project.id_project == 2]
     cosa1 = projects.index([project for project in projects if project.id_project == 2][0])
     print(cosa1)
+
