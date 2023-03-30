@@ -1,3 +1,4 @@
+from session_context import transactional_session
 from .models import Project, Survey, Survey_answer, Survey_ticket, db, User, Stats
 
 
@@ -125,17 +126,20 @@ def show_result(user_name, id_project, id_survey):
 
 def save_results(id_survey,answers, username):
     "Estando en pantalla SURVEY,al dar al botón SAVE->Graba en BBDD las respuestas y los calculos de las medias de esta encuesta y proyecto y actualiza el ticket"
-    try:
+    #try:
+    with transactional_session() as session:
+        result = False
         #En resultado_create guardamos el resultado del metodo create_answer (true o False) que inserta en 'Survey_answer'
         create_answer(id_survey, answers)
         #Actualizamos en la tabla Survey las estadísticas
         update_survey_stats(get_survey_by_id(id_survey))
         update_ticket(username,id_survey)
-        db.session.commit()
-        return True
-    except:
-        db.session.rollback()
-        return False
+    #   db.session.commit()
+        result = True
+        return result
+    #except:
+    #    db.session.rollback()
+    #    return False
         
 def get_answers_by_id(id_survey):
     "Recuperamos todas las filas de survey_answer únicamente la columna answers"
