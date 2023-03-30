@@ -12,7 +12,6 @@ def transactional_session():
         session.commit()
     except (IntegrityError,AttributeError):
         session.rollback()
-        raise
-        #return render_template('error.html', error_message="error", error_description="No se ha podido grabar su respuesta, inténtelo más tarde")
+        #raise
     finally:
         session.close()

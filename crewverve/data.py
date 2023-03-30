@@ -128,7 +128,6 @@ def save_results(id_survey,answers, username):
     "Estando en pantalla SURVEY,al dar al botón SAVE->Graba en BBDD las respuestas y los calculos de las medias de esta encuesta y proyecto y actualiza el ticket"
     #try:
     with transactional_session() as session:
-        result = False
         #En resultado_create guardamos el resultado del metodo create_answer (true o False) que inserta en 'Survey_answer'
         create_answer(id_survey, answers)
         #Actualizamos en la tabla Survey las estadísticas
