@@ -23,8 +23,8 @@ def survey():
 @crewverve_bp.route('/crewverve/results', methods=['POST'])
 def results():
     """results llama a dos métodos:
-    1) save_results -> inserta una respuesta y actualiza estadísticas (pilar, laura)
-    2) update_ticket -> da por completado un ticket por encuesta y usuario
+    1) save_results -> inserta una respuesta y actualiza estadísticas y 
+       update_ticket (da por completado un ticket por encuesta y usuario)
     """ 
     #1.1 Obtenemos datos de pantalla con request.form (survey_id, mood (transformando valores) y rating-n)
     #id_survey = request.form['id_survey']
@@ -42,7 +42,6 @@ def results():
     answers = f'{mood_input},{rating0},{rating1},{rating2},{rating3},{rating4},{rating5},{rating6},{rating7}'
     #1.3 En resultado_save guardamos el resultado del metodo save_results (true o False). 
     # Tiene los metodos 'create_answer' y 'update_survey_stats' y update ticket
-    
     if save_results(id_survey,answers, session['CURRENT_USER']):
         survey = get_survey_by_id(id_survey)
         return redirect(url_for('crewverve.show_results_footer', project_id=survey.id_project, survey_id=int(id_survey)))
